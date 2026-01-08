@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "FluentFlow - English Improver",
-    "version": "1.1",
+    "version": "1.2",
     "description": "Capture seus textos em inglês e receba correções de IA.",
     "permissions": [
         "activeTab",
@@ -10,7 +10,7 @@
     ],
     "browser_specific_settings": {
         "gecko": {
-            "id": "fluentflow@palma.com",
+            "id": "{48cf9842-e70a-494a-852a-0b9b5630373c}",
             "strict_min_version": "58.0"
         }
     },
