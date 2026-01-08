@@ -13,26 +13,25 @@ function extractText(target) {
 function saveToStorage(text) {
     const cleanText = text.trim();
 
-    // Filter: Ignore short texts or strictly numbers
-    if (cleanText.length < 3 || !isNaN(cleanText)) return;
+    // Filter: Ignore strictly numbers or date-like strings
+    if (/^[0-9\s\/\.\-]+$/.test(cleanText)) return;
+
+    // Filter: Ignore Emails (aggressive check)
+    if (/\S+@\S+\.\S+/.test(cleanText)) return;
+
+    // Filter: Ignore Portugese Heuristics
+    // If text contains very common Portuguese stopwords, we assume it's PT.
+    const ptStopwords = /\b(pq|q|que|nao|não|com|para|uma|um|os|as|em|por|voce|você|estou|está|esta)\b/i;
+    if (ptStopwords.test(cleanText)) return;
 
     // Filter: Ignore URLs
     const urlRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)/g;
     if (urlRegex.test(cleanText)) return;
 
-    browser.storage.local.get({ savedInputs: [] }).then((result) => {
-        const inputs = result.savedInputs;
-
-        if (inputs.length > 0 && inputs[0].text === cleanText) return;
-
-        inputs.unshift({
-            id: Date.now(),
-            text: cleanText,
-            url: window.location.hostname,
-            date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        });
-
-        browser.storage.local.set({ savedInputs: inputs.slice(0, 50) });
+    // Send to Background for AI Verification (Costly check)
+    browser.runtime.sendMessage({
+        action: "CHECK_AND_SAVE",
+        text: cleanText
     });
 }
 

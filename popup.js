@@ -46,6 +46,26 @@ document.addEventListener('DOMContentLoaded', () => {
     browser.storage.local.get({ savedInputs: [] }).then((result) => {
         let inputs = result.savedInputs;
 
+        // Cleanup: Remove items that match our "trash" filters (PT, emails, numbers)
+        // This cleans up old data that might have been saved before the update.
+        const ptStopwords = /\b(que|nao|não|com|para|uma|um|os|as|em|por|voce|você|estou|está|esta)\b/i;
+        const emailRegex = /\S+@\S+\.\S+/;
+        const numberRegex = /^[0-9\s\/\.\-]+$/;
+
+        const originalLength = inputs.length;
+        inputs = inputs.filter(item => {
+            if (!item.text) return false;
+            if (ptStopwords.test(item.text)) return false;
+            if (emailRegex.test(item.text)) return false;
+            if (numberRegex.test(item.text)) return false;
+            return true;
+        });
+
+        // If we filtered anything out, update storage immediately
+        if (inputs.length !== originalLength) {
+            browser.storage.local.set({ savedInputs: inputs });
+        }
+
         if (inputs.length === 0) {
             emptyElement.style.display = 'block';
             return;
