@@ -1,0 +1,26 @@
+{
+    "manifest_version": 2,
+    "name": "FluentFlow - English Improver",
+    "version": "1.0",
+    "description": "Capture seus textos em inglês e receba correções de IA.",
+    "permissions": [
+        "activeTab",
+        "storage",
+        "<all_urls>"
+    ],
+    "browser_action": {
+        "default_icon": "icon.png",
+        "default_popup": "popup.html",
+        "default_title": "Abrir FluentFlow"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "content.js"
+            ]
+        }
+    ]
+}
