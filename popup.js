@@ -1,8 +1,6 @@
-const API_KEY = "[REDACTED]";
-
 async function askOpenAI(text) {
-    if (API_KEY.includes("COLE_SUA_CHAVE")) {
-        return { corrected: "Erro", explanation: "Configure sua API Key no arquivo popup.js" };
+    if (!CONFIG.API_KEY || CONFIG.API_KEY.includes("YOUR_KEY")) {
+        return { corrected: "Erro", explanation: "Configure sua API Key no arquivo config.js" };
     }
 
     try {
@@ -10,7 +8,7 @@ async function askOpenAI(text) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${API_KEY}`
+                "Authorization": `Bearer ${CONFIG.API_KEY}`
             },
             body: JSON.stringify({
                 model: "gpt-4o-mini",
